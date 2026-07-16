@@ -7,7 +7,7 @@ jupyter:
       format_version: '1.3'
       jupytext_version: 1.19.4
   kernelspec:
-    display_name: epoxy-inverse-design (3.12.13)
+    display_name: epoxy-inverse-design (3.12.12)
     language: python
     name: python3
 ---
@@ -15,11 +15,11 @@ jupyter:
 ```python
 from ml_tools.ML_datasetmaster import DragonDataset as ChosenDataset
 from ml_tools.ML_trainer import DragonTrainer as ChosenTrainer
-from ml_tools.ML_models import DragonTabularTransformer as ChosenModel
+from ml_tools.ML_models import DragonNodeModel as ChosenModel
 from ml_tools.ML_configuration import (
     FormatRegressionMetrics as ChosenMetricsConfig, 
     FinalizeRegression as ChosenFinalizer, 
-    DragonTabularTransformerParams as ChosenModelParams,    
+    DragonNodeParams as ChosenModelParams,    
 )
 
 from ml_tools.ML_configuration import DragonTrainingConfig
@@ -60,17 +60,17 @@ dataset = ChosenDataset.from_bundle(TRAIN_DATASET_PATH)
 train_config = DragonTrainingConfig(
     validation_size=dataset.validation_split,
     test_size=dataset.test_split,
-    initial_learning_rate=0.001,
-    batch_size=32,
+    initial_learning_rate=0.005,
+    batch_size=24,
     task = TaskKeys.REGRESSION,
     device = "cuda:0",
-    finalized_filename = "tab_transformer_finalized_model",
+    finalized_filename = "NODE_regression_model",
     
     targets=TARGET,
-    weight_decay=0.005,
+    weight_decay=0.01,
     early_stop_patience=25,
     scheduler_patience=6,
-    scheduler_lr_factor=0.8,
+    scheduler_lr_factor=0.7,
     monitor_metric="Validation Loss"
 )
 ```
@@ -79,12 +79,17 @@ train_config = DragonTrainingConfig(
 
 ```python
 model_params = ChosenModelParams(
-    schema=schema,
-    out_targets=dataset.number_of_targets,
-    embedding_dim=512,
-    num_heads=8,
-    num_layers=6,
-    dropout=0.1,
+    schema = schema,
+    out_targets = dataset.number_of_targets,
+    embedding_dim = 32,
+    num_trees = 1024,
+    num_layers = 3,
+    tree_depth = 6,
+    additional_tree_output_dim = 3,
+    input_dropout = 0,
+    embedding_dropout = 0,
+    choice_function = 'entmax',
+    bin_function = 'entmoid'
 )
 
 model = ChosenModel(**model_params)

@@ -1,6 +1,6 @@
 from ml_tools.ML_optimization import DragonOptimizer
 from ml_tools.ML_configuration import DragonOptimizerConfig
-from ml_tools.ML_models import DragonTabularTransformer
+from ml_tools.ML_models import DragonNodeModel
 from ml_tools.ML_inference import DragonInferenceHandler
 from ml_tools.ML_utilities import DragonArtifactFinder
 from ml_tools.schema import FeatureSchema
@@ -22,8 +22,9 @@ def main():
                                    save_directory=PM.optimization,
                                    save_format="csv",
                                    algorithm="Genetic",
-                                   population_size=1000,
-                                   generations=1000)
+                                   population_size=25,
+                                   generations=10,
+                                   repetitions=500)
     
     # Load train artifacts
     artifact_finder = DragonArtifactFinder(directory=PM.regression,
@@ -32,7 +33,7 @@ def main():
                                            strict=True)
     
     # Load the model architecture
-    model = DragonTabularTransformer.load_architecture(artifact_finder.model_architecture_path) # type: ignore
+    model = DragonNodeModel.load_architecture(artifact_finder.model_architecture_path) # type: ignore
     
     # Load the model weights and set up the inference handler
     inference_handler = DragonInferenceHandler(model=model,

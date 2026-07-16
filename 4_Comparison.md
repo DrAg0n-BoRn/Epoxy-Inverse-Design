@@ -7,7 +7,7 @@ jupyter:
       format_version: '1.3'
       jupytext_version: 1.19.4
   kernelspec:
-    display_name: epoxy-inverse-design (3.12.13)
+    display_name: epoxy-inverse-design (3.12.12)
     language: python
     name: python3
 ---
@@ -111,7 +111,7 @@ df_inverse_raw = load_dataframe_greedy(PM.optimization)
 
 ```python
 df_inverse = filter_subset_continuous(df=df_inverse_raw, 
-                                    range_filters={TARGET: TARGET_RANGE},
+                                    range_filters={TARGET: (TARGET_RANGE[0], None)},
                                     drop_filter_cols=True)
 ```
 
@@ -124,7 +124,7 @@ summarize_dataframe(df_inverse)
 ```python
 plot_numeric_overview_boxplot_macro(df=df_inverse,
                                     save_dir=PM.comparison,
-                                    plot_title=f"Inverse Design Generated - {TARGET} {TARGET_RANGE[0]} to {TARGET_RANGE[1]}",
+                                    plot_title=f"Inverse Design Generated - {TARGET} {TARGET_RANGE[0]}+",
                                     handle_zero_variance="constant",
                                     font_scaling=1.5)
 ```
@@ -133,7 +133,7 @@ plot_numeric_overview_boxplot_macro(df=df_inverse,
 #TODO: Must have same column names and dtypes (cast int to float if necessary)
 named_datasets = {f"Train Data ({TARGET_RANGE[0]}-{TARGET_RANGE[1]} {TARGET_UNIT})": df_range, 
                   f"Diffusion Generated ({TARGET_RANGE[0]}-{TARGET_RANGE[1]} {TARGET_UNIT})": df_diffusion,
-                  f"Inverse Design Generated ({TARGET_RANGE[0]}-{TARGET_RANGE[1]} {TARGET_UNIT})": df_inverse} 
+                  f"Inverse Design Generated ({TARGET_RANGE[0]}+ {TARGET_UNIT})": df_inverse} 
 ```
 
 ## Plot Comparison Distributions
