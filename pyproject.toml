@@ -1,0 +1,18 @@
+[project]
+name = "epoxy_inverse_design"
+version = "1.0.0"
+description = "Inverse design of epoxy composites using machine learning and optimization techniques. Plus comparison of generated designs with diffusion-generated data."
+readme = "README.md"
+requires-python = "==3.12.*"
+dependencies = [
+    "dragon-ml-toolbox[ml]==23.6.0",
+]
+
+[dependency-groups]
+dev = [
+    "jupytext>=1.19.1",
+]
+
+# Jupytext configuration
+[tool.jupytext]
+formats = "ipynb,md"
